@@ -13,6 +13,7 @@ public class DriverFactory {
     public WebDriver initDriver(){
         WebDriverManager.getInstance(FirefoxDriver.class).driverVersion("0.30.0").setup();
         WebDriver webDriver = new FirefoxDriver();
+        webDriver.manage().window().maximize();
         tlDriver.set(webDriver);
         return getDriver();
     }
