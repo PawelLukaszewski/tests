@@ -37,7 +37,6 @@ public class Task4Test {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='time-status' and not(ancestor::div[contains(@id,'thumbnail-underlay')])]")));
         List<WebElement> videoElements = webDriver.findElements(By.cssSelector(".style-scope ytd-rich-item-renderer > div"));
 
-
         for (WebElement vidElements : Iterables.limit(videoElements, 12)) {
             String videoTitle = vidElements.findElement(By.id("video-title")).getText();
             String channelName = vidElements.findElement(By.cssSelector("ytd-channel-name #text")).getText();
@@ -54,10 +53,11 @@ public class Task4Test {
 
         for (int i = 0; i < ytTileList.size(); i++) {
             YTTile ytTile = ytTileList.get(i);
-            System.out.println("Filmik #" + (i + 1) + ":");
-            System.out.println("Tytuł filmiku: " + ytTile.getTitle());
-            System.out.println("Nazwa kanał: " + ytTile.getChannel());
-            System.out.println("Czas trwania: " + ytTile.getLength() + "\n");
+            if (!(ytTile.getLength() == "Na żywo")) {
+                System.out.println("Filmik #" + (i + 1) + ":");
+                System.out.println("Tytuł filmiku: " + ytTile.getTitle());
+                System.out.println("Czas trwania: " + ytTile.getLength() + "\n");
+            }
         }
     }
 }
