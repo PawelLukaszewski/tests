@@ -2,6 +2,7 @@ package com.gitlab.rmarzec.task;
 
 import com.gitlab.rmarzec.framework.utils.DriverFactory;
 import com.gitlab.rmarzec.model.YTTile;
+import com.google.common.collect.Iterables;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +14,7 @@ import pages.youTube.YouTubePage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Task4Test {
     @Test
@@ -25,29 +27,29 @@ public class Task4Test {
         List<YTTile> ytTileList = new ArrayList<YTTile>();
 
         youTubeMainPage.ClickAcceptAllCookiesButton();
-
         WebDriverWait wait = new WebDriverWait(webDriver, 15);
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ytd-rich-grid-row.ytd-rich-grid-renderer:nth-child(4)")));
         WebElement element = webDriver.findElement(By.cssSelector("ytd-rich-grid-row.ytd-rich-grid-renderer:nth-child(4)"));
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
 
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("avatar-link")));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='time-status' and not(ancestor::div[contains(@id,'thumbnail-underlay')])]")));
+        List<WebElement> videoElements = webDriver.findElements(By.cssSelector(".style-scope ytd-rich-item-renderer > div"));
 
-        List<WebElement> videoElements = webDriver.findElements(By.xpath("//*[@id='video-title' and (ancestor::div[contains(@class,'ytd-rich-grid-row')])]"));
-        List<WebElement> channelElements = webDriver.findElements(By.xpath("//*[@id='text-container' and (ancestor::div[contains(@class,'ytd-rich-grid-row')])]"));
-        List<WebElement> durationElements = webDriver.findElements(By.cssSelector("ytd-thumbnail>a>div>ytd-thumbnail-overlay-time-status-renderer>div>span"));
 
-        for (int i = 0; i < 12; i++) {
-            WebElement videoTitleElement = videoElements.get(i);
-            WebElement channelNameElement = channelElements.get(i);
-            WebElement durationTimeElement = durationElements.get(i);
-
-            String videoTitle = videoTitleElement.getText();
-            String channelName = channelNameElement.getText();
-            String duration = durationTimeElement.getText();
-
-            ytTileList.add(new YTTile(videoTitle, channelName, duration));
+        for (WebElement vidElements : Iterables.limit(videoElements, 12)) {
+            String videoTitle = vidElements.findElement(By.xpath("//*[@id='video-title' and (ancestor::div[contains(@class,'ytd-rich-grid-row')])]")).getText();
+            String channelName = vidElements.findElement(By.id("avatar-link")).getAttribute("title");
+            String videoLength;
+            Optional<WebElement> length;
+            length = vidElements.findElements(By.cssSelector("ytd-thumbnail>a>div>ytd-thumbnail-overlay-time-status-renderer>div>span")).stream().findFirst();
+            if (length.isPresent()) {
+                videoLength = length.get().getText();
+            } else {
+                videoLength = "Na żywo";
+            }
+            ytTileList.add(new YTTile(videoTitle, channelName, videoLength));
         }
 
         for (int i = 0; i < ytTileList.size(); i++) {

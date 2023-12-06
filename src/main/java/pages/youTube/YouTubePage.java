@@ -13,7 +13,7 @@ public class YouTubePage extends BasePage {
         super(driver);
     }
 
-    @FindBy(css = "[aria-label='Zaakceptuj wykorzystywanie plików cookie i innych danych do opisanych celów']")
+    @FindBy(xpath = "//span[text()='Zaakceptuj wszystko']/../..")
     private WebElement acceptAllCookiesButton;
 
     @FindBy(css = "//*[@id='time-status' and (ancestor::div[contains(@class,'ytd-rich-grid-row')])]")
@@ -24,9 +24,4 @@ public class YouTubePage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(acceptAllCookiesButton));
         click(acceptAllCookiesButton);
     }
-//    public void waitOnTimeSection() {
-//        wait(timeSection,Duration.ofSeconds(20));
-//    }
-
-
 }
