@@ -33,14 +33,14 @@ public class Task4Test {
         WebElement element = webDriver.findElement(By.cssSelector("ytd-rich-grid-row.ytd-rich-grid-renderer:nth-child(4)"));
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView(true);", element);
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("avatar-link")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ytd-channel-name #text")));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='time-status' and not(ancestor::div[contains(@id,'thumbnail-underlay')])]")));
         List<WebElement> videoElements = webDriver.findElements(By.cssSelector(".style-scope ytd-rich-item-renderer > div"));
 
 
         for (WebElement vidElements : Iterables.limit(videoElements, 12)) {
-            String videoTitle = vidElements.findElement(By.xpath("//*[@id='video-title' and (ancestor::div[contains(@class,'ytd-rich-grid-row')])]")).getText();
-            String channelName = vidElements.findElement(By.id("avatar-link")).getAttribute("title");
+            String videoTitle = vidElements.findElement(By.id("video-title")).getText();
+            String channelName = vidElements.findElement(By.cssSelector("ytd-channel-name #text")).getText();
             String videoLength;
             Optional<WebElement> length;
             length = vidElements.findElements(By.cssSelector("ytd-thumbnail>a>div>ytd-thumbnail-overlay-time-status-renderer>div>span")).stream().findFirst();
